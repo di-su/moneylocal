@@ -133,6 +133,9 @@
                                 <td>
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-id="{{ $income->id }}" data-type="{{ $income->type }}" data-amount="{{ $income->amount }}" data-target="#editItem">Edit</button>
                                 </td>
+                                <td>
+                                    <button type="button" class="btn btn-danger" data-toggle="modal" data-id="{{ $income->id }}" data-type="{{ $income->type }}" data-amount="{{ $income->amount }}" data-target="#deleteItem">Delete</button>
+                                </td>
                             </tr>
                             @endforeach
                             @foreach ($expenses as $expense)
