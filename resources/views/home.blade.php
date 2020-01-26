@@ -4,23 +4,39 @@
 
 {{-- Pre-fill edit modal with relevant item --}}
 <script>
+    function totalIncome() {
+        var sum = 0;
+        $('.income').each(function(){
+            sum += parseFloat($(this).text().replace(/,/g , ""));
+        });
+        $('#total-income').text(sum);
+    }
+    function totalExpense() {
+        var sum = 0;
+        $('.expense').each(function(){
+            sum += parseFloat($(this).text().replace(/,/g , ""));
+        });
+        $('#total-expense').text(sum);
+    }
     $( document ).ready(function() {
+        totalIncome();
+        totalExpense();
         $('#editItem').on('show.bs.modal', function (event) {
-        var button = $(event.relatedTarget)
+            var button = $(event.relatedTarget)
 
-        // Capture data from the edit button
-        var amount = button.data('amount')
-        var type = button.data('type')
-        var id = button.data('id')
+            // Capture data from the edit button
+            var amount = button.data('amount')
+            var type = button.data('type')
+            var id = button.data('id')
 
-        // Fill the opened modal with data stored in the clicked edit button
-        var modal = $(this)
-        modal.find('.modal-body input[name=amount]').val(amount);
-        modal.find(".modal-body input[name=type][value="+ type +"]").prop('checked', true);
-        modal.find(".modal-body input[name=id]").val(id);
-    })
-});
+            // Fill the opened modal with data stored in the clicked edit button
+            var modal = $(this)
+            modal.find('.modal-body input[name=amount]').val(amount);
+            modal.find(".modal-body input[name=type][value="+ type +"]").prop('checked', true);
+            modal.find(".modal-body input[name=id]").val(id);
+        });
 
+    });
 </script>
 
 <!-- Modal -->
@@ -81,7 +97,7 @@
                                 </div>
                                 <div class="form-group">
                                     <label>Income amount</label>
-                                    <input name="amount" type="float" class="form-control">
+                                    <input type="number" step="0.01" required="required" name="amount" class="form-control">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </form>
@@ -102,11 +118,11 @@
                                 @csrf
                                 <div class="form-group">
                                     <label>Expense name</label>
-                                    <input name="item" type="text" class="form-control">
+                                    <input required=required name="item" type="text" class="form-control">
                                 </div>
                                 <div class="form-group">
                                     <label>Expense amount</label>
-                                    <input name="amount" type="float" class="form-control">
+                                    <input type="number" step="0.01" required="required" name="amount" class="form-control">
                                 </div>
                                 <button type="submit" class="btn btn-primary">Submit</button>
                             </form>
@@ -129,7 +145,7 @@
                             @foreach ($incomes as $income)
                             <tr>
                                 <td>{{ ucfirst($income->type) }}</td>
-                                <td style="color: green">{{ $income->amount }}</td>
+                                <td class="income" style="color: green">{{ number_format($income->amount, 2, '.', ',')  }}</td>
                                 <td>
                                     <button type="button" class="btn btn-primary" data-toggle="modal" data-id="{{ $income->id }}" data-type="{{ $income->type }}" data-amount="{{ $income->amount }}" data-target="#editItem">Edit</button>
                                 </td>
@@ -141,10 +157,22 @@
                             @foreach ($expenses as $expense)
                             <tr>
                                 <td>{{ ucfirst($expense->item) }}</td>
-                                <td style="color: red">{{ $expense->amount }}</td>
+                                <td class="expense" style="color: red">{{ $expense->amount }}</td>
                                 <td>Edit</td>
                             </tr>
                             @endforeach
+
+                            <tr style="font-size: 20px; color: green;">
+                                <td>Total Income:</td>
+                                <td id="total-income"></td>
+                                <td></td>
+                            </tr>
+                            <tr style="font-size: 20px; color: red;">
+                                <td>Total Expenses:</td>
+                                <td id="total-expense"></td>
+                                <td></td>
+                            </tr>
+
                             @isset($balance)
                             @if ($balance->amount < 0)
                                 <tr style="font-size: 20px; color: red;">

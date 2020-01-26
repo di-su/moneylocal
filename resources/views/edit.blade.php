@@ -18,6 +18,6 @@
     </div>
     <div class="form-group">
         <label>Income amount</label>
-        <input name="amount" type="float" class="form-control">
+        <input type="number" step="0.01" required="required" name="amount" class="form-control">
     </div>
 {{-- </form> --}}
